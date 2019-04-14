@@ -1,0 +1,9 @@
+body {
+    background-image: url("../images/mario-hd-wallpaper-1.jpg");
+    color: black;
+    background-size: cover;
+}
+.options {
+    margin: 20px;
+    padding: 20px;
+}

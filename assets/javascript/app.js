@@ -13,111 +13,128 @@ $(document).ready(function() {
     // hide timer
     $("#time-remaining").hide();
     // start game
-    $(".start").on("click", triviaGame.gameStart);
-    // check users choices
-    $(document).on("click", ".choices", triviaGame.choicesCheck);
+    $(".start").on("click", gameStart);
+  
 });
 //create an object containing variables needed:
-    var triviaGame = {
-        correctAnswer: 0,
-        wrongAnswer: 0,
-        unanswered: 0,
-        timer: 20,
-        
-        currentQuestion: 0,
-        qaBundle: [{question: "What year did Nintendo start making video games?",
+    var intervalId;
+        timer = 30;
+        breakTimer = 5;
+        correctAnswer = 0;
+        wrongAnswer = 0;
+        unanswered = 0;
+        currentQuestion = 0;
+        triviaGame =[{question: "What year did Nintendo start making video games?",
                      choices: ["1973", "1987", "2010", "1983"],
-                     answer: 0},
+                     answer: [0, "1973"]},
                     {question: "In what game did Mario make his first appearance?",
                      choices: ["Super Mario Bros.", "Donkey Kong", "Duck Hunt", "Mario Kart 64"],
-                     answer: 1},
+                     answer: [1, "Donkey Kong"]},
                     {question: "What was Mario's name before his name was Mario?",
                      choices: ["Punchman", "Plumber Man", "Jumpman", "Carpenter Man"],
-                     answer: 2},
+                     answer: [2, "Jumpman"]},
                     {question: "What did Nintendo do before video games?",
                      choices: ["Playing Cards", "Love Hotels", "Baseball", "Watches"],
-                     answer: 0},
+                     answer: [0, "Playing Cards"]},
                     {question: "What is the name of the enemy that kidnaps Princess Peach?",
                      choices: ["Kamek", "Lakitu", "Yoshi", "Bowser"],
-                     answer: 3}],
+                     answer: [3, "Bowser"]}];
 
-        questions: {
-            q1: "What year did Nintendo start making video games?",
-            q2: "In what game did Mario make his first appearance?",
-            q3: "What was Mario's name before his name was Mario?",
-            q4: "What did Nintendo do before video games?",
-            q5: "What is the name of the enemy that kidnaps Princess Peach?",
-        },
-        choices: {
-            c1: ["1975", "1987", "2010", "1983"],
-            c2: ["Super Mario Bros.", "Donkey Kong", "Duck Hunt", "Mario Kart 64"],
-            c3: ["Punchman", "Plumber Man", "Jumpman", "Carpenter Man"],
-            c4: ["Playing Cards", "Love Hotels", "Baseball", "Watches"],
-            c5: ["Kamek", "Lakitu", "Bowser", "Yoshi"],
-        },
-        answers: {
-            a1: "1973",
-            a2: "Donkey Kong",
-            a3: "Jumpman",
-            a4: "Playing Cards",
-            a5: "Bowser",
-        },
-    
-    // methods for the trivia game
+                     console.log(triviaGame);
+    // functions for the trivia game
 
-    // this method starts the game
-    gameStart: function(){
+    // this function starts the game
+    function gameStart(){
+        // display and start timer; show time-remaining div
+        run();
         // hide start button
         $('.start').hide();
         // display question and choices
-        var question1 = triviaGame.qaBundle[0].question;
-        $('#questions').text(question1);
+        $('#questions').show;
+        var questionP = $('<p>');
+        questionP.addClass('question');
+        questionP.attr("data-question", triviaGame[currentQuestion].question);
+        questionP.text(triviaGame[currentQuestion].question);
+        $('#questions').append(questionP);
 
-        var choices = triviaGame.qaBundle[0].choices;
-
-        for (let i=0; i<choices.length; i++){
-            var choiceButton = $('<button>').text(triviaGame.qaBundle[0].choices[i]); 
-            choiceButton.addClass('choices');
-            $('#choices').append(choiceButton);
+        $('#choices').show;
+        for (let i = 0; i < triviaGame[currentQuestion].choices.length; i++){
+            var choicesButton = $('<button>');
+            choicesButton.addClass('options');
+            choicesButton.attr('data-choices', triviaGame[currentQuestion].choices[i]);
+            choicesButton.attr('answer', triviaGame[currentQuestion].answer[1]);
+            choicesButton.text(triviaGame[currentQuestion].choices[i]);
+            $('#choices').append(choicesButton);
         }
-        // display and start timer; show time-remaining div
-        $('time-remaining').show();
-        // check user choices if correct or not
-        
-      
-    },
+         // listen for users choices
+        $('.options').on("click", function choicesCheck(){
+            
+         // check user choices if correct or not
+         
+            // if choice equals answer increment correctAnswer
+            var userInput = $(this).attr('data-choices');
+            console.log("userInput: " + userInput)
 
-    choicesCheck: function(){
-        // if choice equals answer increment correctAnswer
-        if (choiceButton === triviaGame.qaBundle[0].answer){
-            $('#results').text("Woo-hoo!");
-        }
-        // display winning image for 5-10 seconds in results div
-        // move to next question
-        // else if choice !== correctAnswer increment wrongAnswer
-        // display text that user is incorrect and show correctAnswer in results div
-        // move to next question
-        // else timer runs out increment unanswered
-        // display text time ran out and show correctAnswer in results div
-    },
+            var answer = $(this).attr('answer');
+            console.log("answer: " + answer)
 
-    nextQuestion: function(){
+            if (userInput == answer){
+                correctAnswer++;
+                $('#questions').hide();
+                $('#choices').hide();
+                $('#results').show();
+                stop();
+            // display winning image for 5 seconds in results div
+            var victoryImage = $('<img>');
+            victoryImage.attr("src", "assets/images/200px-Mario_Victory_Pose_Artwork_-_Super_Mario_64.png");
+            $('#results').append(victoryImage);
+            victoryTimer();
+            // move to next question
+            }
+            
+            // else if choice !== correctAnswer increment wrongAnswer
+            else if (userInput !== triviaGame[currentQuestion].answer[0]){
+                wrongAnswer++;
+                var wrongAnswer = $('<p>');
+                wrongAnswer.addClass('wrong');
+                wrongAnswer.attr("data-wrong", triviaGame[currentQuestion].answer[1]);
+                wrongAnswer.text(triviaGame[currentQuestion].answer[1]);
+                $('#results').append(answer);
+                $('#questions').hide();
+                $('#choices').hide();
+                $('#results').show();
+            }
+            // display text that user is incorrect and show correctAnswer in results div
+            // move to next question
+            
+            currentQuestion++;
+            if(currentQuestion >= triviaGame.length){
+                currentQuestion = 0;
+
+            }
+        });
+    }
+    
+    
+    
+
+    function nextQuestion(){
         // clear results div
         // display next question and choices
         // display and start reset timer 20 seconds
         // check user choices if correct or not
 
-    },
-    endgameResults: function(){
+    }
+    function endgameResults(){
         // when final question answered, in results div
         // display scores of the following
         // correctAnswer: 
         // wrongAnswer: 
         // unanswered: 
         // gameReset button to bring user back to start
-    },
+    }
 
-    gameReset: function(){
+    function gameReset (){
         // clear results div 
         // hide time-remaining div
         // show start button 
@@ -126,10 +143,38 @@ $(document).ready(function() {
         // unanswered: 0,
         // setCounter = 0,
         // timer: 20,
-    },
+    }
     
+// timer functions
+function run() {
+    $('.start').hide();
+    clearInterval(intervalId);
+    intervalId = setInterval(decrement, 1000);
+    $('#time-remaining').show();
+  }
+
+function decrement(){
+    timer--;
+        $("#time-remaining").html("<h2>" + timer + "</h2>");
+    
+        if (timer === 0){
+            stop();
+            endgameResults();
+        }
 }
-console.log(triviaGame)
+function stop() {
+    clearInterval(intervalId);
+}
+function victoryTimer() {
+    clearInterval(intervalId);
+    intervalId = setInterval(pause, 1000);
+    $('#time-remaining').show();
+}
+function pause(){
+    breakTimer--;
+}
+
+
 
 
 

@@ -10,18 +10,19 @@
 
 </head>
 <body>
-    <div id="game">Trivia Game</div>
-    <!--Button to start trivia game-->
-    <button type="button" class="btn btn-success start">Start</button>
-    <!--Displays time remaining countdown for each question-->
-    <div id="time-remaining"></div>
-    <!-- Displays question -->
-    <div id="questions"></div>
-    <!-- Displays choices -->
-    <div id="choices"></div>
-    <!--Displays results after each question and final results of game-->
-    <div id="results"></div>
-
+    <div id="game" class="container-fluid text-center">
+        <h1 class="mt-5 mb-5"><strong>Trivia Game</strong></h1>
+        <!-- Displays question -->
+        <div id="questions" class="mt-5"></div>
+        <!-- Displays choices -->
+        <div id="choices" class="mt-5"></div>
+        <!--Button to start trivia game-->
+        <button type="button" class="btn btn-success start btn-lg font-weight-bold">Start</button>
+        <!--Displays results after each question and final results of game-->
+        <div id="results"></div>
+         <!--Displays time remaining countdown for each question-->
+         <div id="time-remaining" class="mt-5"></div>
+    </div>
     <footer></footer>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
     <script src="assets/javascript/app.js"></script>
