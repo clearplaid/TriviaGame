@@ -16,12 +16,12 @@ $(document).ready(function() {
     $(".start").on("click", gameStart);
   
 });
-//create an object containing variables needed:
+//create variables needed:
     var intervalId;
-        timer = 30;
-        breakTimer = 5;
+        timer = 15;
+        breakTimer = 3;
         correctAnswer = 0;
-        wrongAnswer = 0;
+        incorrectAnswer = 0;
         unanswered = 0;
         currentQuestion = 0;
         triviaGame =[{question: "What year did Nintendo start making video games?",
@@ -48,16 +48,14 @@ $(document).ready(function() {
         // display and start timer; show time-remaining div
         run();
         // hide start button
-        $('.start').hide();
         // display question and choices
-        $('#questions').show;
         var questionP = $('<p>');
         questionP.addClass('question');
         questionP.attr("data-question", triviaGame[currentQuestion].question);
         questionP.text(triviaGame[currentQuestion].question);
         $('#questions').append(questionP);
+        $('#questions').show();
 
-        $('#choices').show;
         for (let i = 0; i < triviaGame[currentQuestion].choices.length; i++){
             var choicesButton = $('<button>');
             choicesButton.addClass('options');
@@ -65,6 +63,7 @@ $(document).ready(function() {
             choicesButton.attr('answer', triviaGame[currentQuestion].answer[1]);
             choicesButton.text(triviaGame[currentQuestion].choices[i]);
             $('#choices').append(choicesButton);
+            $('#choices').show();
         }
          // listen for users choices
         $('.options').on("click", function choicesCheck(){
@@ -80,38 +79,45 @@ $(document).ready(function() {
 
             if (userInput == answer){
                 correctAnswer++;
-                $('#questions').hide();
-                $('#choices').hide();
+                console.log(correctAnswer);
+            // display winning image for 3 seconds in results div
+                var victoryImage = $('<img>');
+                victoryImage.attr("src", "assets/images/200px-Mario_Victory_Pose_Artwork_-_Super_Mario_64.png");
+                $('#results').append(victoryImage);
                 $('#results').show();
+                $('#questions').empty();
+                $('#questions').hide();
+                $('#choices').empty();
+                $('#choices').hide();
+                $("#time-remaining").hide();
                 stop();
-            // display winning image for 5 seconds in results div
-            var victoryImage = $('<img>');
-            victoryImage.attr("src", "assets/images/200px-Mario_Victory_Pose_Artwork_-_Super_Mario_64.png");
-            $('#results').append(victoryImage);
-            victoryTimer();
+                victoryTimer();
+               
             // move to next question
             }
             
             // else if choice !== correctAnswer increment wrongAnswer
-            else if (userInput !== triviaGame[currentQuestion].answer[0]){
-                wrongAnswer++;
+            else{
+                incorrectAnswer++;
+                console.log(incorrectAnswer);
                 var wrongAnswer = $('<p>');
                 wrongAnswer.addClass('wrong');
                 wrongAnswer.attr("data-wrong", triviaGame[currentQuestion].answer[1]);
                 wrongAnswer.text(triviaGame[currentQuestion].answer[1]);
-                $('#results').append(answer);
+                var wrongImage = $('<img>');
+                wrongImage.attr("src", 'assets/images/cat-jenga.jpg');
+                $('#results').append(wrongImage);
+                $('#results').append(wrongAnswer);
                 $('#questions').hide();
                 $('#choices').hide();
+                $("#time-remaining").hide();
                 $('#results').show();
+                stop();
+                victoryTimer();
+                
             }
             // display text that user is incorrect and show correctAnswer in results div
             // move to next question
-            
-            currentQuestion++;
-            if(currentQuestion >= triviaGame.length){
-                currentQuestion = 0;
-
-            }
         });
     }
     
@@ -123,26 +129,63 @@ $(document).ready(function() {
         // display next question and choices
         // display and start reset timer 20 seconds
         // check user choices if correct or not
+        $('.start').hide();
 
+        $('#questions').empty();
+        $('#questions').show();
+        
+        $('#results').empty();
+
+        $('#choices').empty();
+        $('#choices').show();
+        currentQuestion++;
+        if (currentQuestion < triviaGame.length){
+        currentQuestion %= triviaGame.length;
+        timer = 15;
+        breakTimer = 3;
+        gameStart();
+        }else{
+            endgameResults();
+        }
     }
     function endgameResults(){
         // when final question answered, in results div
         // display scores of the following
+        var correct = $('<p>');
+        correct.addClass('correctNumber');
+        correct.text('Correct: ' + correctAnswer);
+        $('#results').append(correct);
         // correctAnswer: 
         // wrongAnswer: 
+        var incorrect = $('<p>');
+        incorrect.addClass('incorrectNumber');
+        incorrect.text('Incorrect: ' + incorrectAnswer);
+        $('#results').append(incorrect);
         // unanswered: 
-        // gameReset button to bring user back to start
+        $('#questions').empty();
+        $('#questions').hide();
+        $('#choices').empty();
+        $('#choices').hide();
+        $('#results').show();
+        var restart = $('<button>');
+        restart.addClass('restart');
+        restart.text('Restart Game');
+        $('#results').append(restart);
+        $('.restart').click(gameReset);
     }
 
     function gameReset (){
+        $('.restart').hide();
         // clear results div 
-        // hide time-remaining div
-        // show start button 
-        // correctAnswer: 0,
-        // wrongAnswer: 0,
-        // unanswered: 0,
-        // setCounter = 0,
-        // timer: 20,
+        $('#results').empty();
+        $('.start').show();
+        // reset counters
+        correctAnswer = 0;
+        incorrectAnswer = 0;
+        // unanswered = 0;
+        currentQuestion = 0;
+        timer = 15;
+        
     }
     
 // timer functions
@@ -166,12 +209,17 @@ function stop() {
     clearInterval(intervalId);
 }
 function victoryTimer() {
+    breakTimer = 3;
     clearInterval(intervalId);
     intervalId = setInterval(pause, 1000);
-    $('#time-remaining').show();
+    
+    
 }
 function pause(){
     breakTimer--;
+    if(breakTimer === 0){
+        nextQuestion();
+    }
 }
 
 
