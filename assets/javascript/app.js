@@ -65,18 +65,20 @@ $(document).ready(function() {
             $('#choices').append(choicesButton);
             $('#choices').show();
         }
+        
+        
          // listen for users choices
-        $('.options').on("click", function choicesCheck(){
-            
+        $('.options').click(choicesCheck);
+      
          // check user choices if correct or not
-         
+         function choicesCheck(){
             // if choice equals answer increment correctAnswer
             var userInput = $(this).attr('data-choices');
             console.log("userInput: " + userInput)
 
             var answer = $(this).attr('answer');
             console.log("answer: " + answer)
-
+        
             if (userInput == answer){
                 correctAnswer++;
                 console.log(correctAnswer);
@@ -93,10 +95,8 @@ $(document).ready(function() {
                 stop();
                 victoryTimer();
                
-            // move to next question
             }
-            
-            // else if choice !== correctAnswer increment wrongAnswer
+            // else if choice !== correctAnswer increment incorrectAnswer
             else{
                 incorrectAnswer++;
                 console.log(incorrectAnswer);
@@ -116,9 +116,8 @@ $(document).ready(function() {
                 victoryTimer();
                 
             }
-            // display text that user is incorrect and show correctAnswer in results div
-            // move to next question
-        });
+         
+        };
     }
     
     
@@ -127,7 +126,7 @@ $(document).ready(function() {
     function nextQuestion(){
         // clear results div
         // display next question and choices
-        // display and start reset timer 20 seconds
+        // display and start reset timer 15 seconds
         // check user choices if correct or not
         $('.start').hide();
 
@@ -151,27 +150,34 @@ $(document).ready(function() {
     function endgameResults(){
         // when final question answered, in results div
         // display scores of the following
+        // correctAnswer: 
         var correct = $('<p>');
         correct.addClass('correctNumber');
         correct.text('Correct: ' + correctAnswer);
-        $('#results').append(correct);
-        // correctAnswer: 
+        $('#results').append(correct);    
         // wrongAnswer: 
         var incorrect = $('<p>');
         incorrect.addClass('incorrectNumber');
         incorrect.text('Incorrect: ' + incorrectAnswer);
         $('#results').append(incorrect);
         // unanswered: 
-        $('#questions').empty();
-        $('#questions').hide();
-        $('#choices').empty();
-        $('#choices').hide();
-        $('#results').show();
+        var notAnswered = $('<p>');
+        notAnswered.addClass('unanswered');
+        notAnswered.text('Unanswered: ' + unanswered);
+        $('#results').append(notAnswered);
+        // restart button
         var restart = $('<button>');
         restart.addClass('restart');
         restart.text('Restart Game');
         $('#results').append(restart);
         $('.restart').click(gameReset);
+
+        $('#questions').empty();
+        $('#questions').hide();
+        $('#choices').empty();
+        $('#choices').hide();
+        $('#results').show();
+        
     }
 
     function gameReset (){
@@ -182,7 +188,7 @@ $(document).ready(function() {
         // reset counters
         correctAnswer = 0;
         incorrectAnswer = 0;
-        // unanswered = 0;
+        unanswered = 0;
         currentQuestion = 0;
         timer = 15;
         
@@ -198,12 +204,23 @@ function run() {
 
 function decrement(){
     timer--;
-        $("#time-remaining").html("<h2>" + timer + "</h2>");
-    
-        if (timer === 0){
-            stop();
-            endgameResults();
-        }
+    $("#time-remaining").html("<h2>" + timer + "</h2>");
+    if (timer === 0){
+        unanswered++;
+        console.log(unanswered);
+        stop();
+        var outOfTime = $('<img>');
+        outOfTime.addClass('outOfTime');
+        outOfTime.attr("src", "assets/images/maxresdefault.jpg");
+        $('#results').append(outOfTime);
+        $('#results').show();
+        $('#questions').empty();
+        $('#questions').hide();
+        $('#choices').empty();
+        $('#choices').hide();
+        $("#time-remaining").hide();
+        victoryTimer();
+}
 }
 function stop() {
     clearInterval(intervalId);
@@ -221,8 +238,5 @@ function pause(){
         nextQuestion();
     }
 }
-
-
-
 
 
