@@ -152,22 +152,22 @@ $(document).ready(function() {
         // display scores of the following
         // correctAnswer: 
         var correct = $('<p>');
-        correct.addClass('correctNumber');
+        correct.addClass('correctNumber font-weight-bold');
         correct.text('Correct: ' + correctAnswer);
         $('#results').append(correct);    
         // wrongAnswer: 
         var incorrect = $('<p>');
-        incorrect.addClass('incorrectNumber');
+        incorrect.addClass('incorrectNumber font-weight-bold');
         incorrect.text('Incorrect: ' + incorrectAnswer);
         $('#results').append(incorrect);
         // unanswered: 
         var notAnswered = $('<p>');
-        notAnswered.addClass('unanswered');
+        notAnswered.addClass('unanswered font-weight-bold');
         notAnswered.text('Unanswered: ' + unanswered);
         $('#results').append(notAnswered);
         // restart button
         var restart = $('<button>');
-        restart.addClass('restart');
+        restart.addClass('restart font-weight-bold btn btn-success');
         restart.text('Restart Game');
         $('#results').append(restart);
         $('.restart').click(gameReset);
@@ -191,7 +191,8 @@ $(document).ready(function() {
         unanswered = 0;
         currentQuestion = 0;
         timer = 15;
-        
+        breakTimer = 3;
+        stop();
     }
     
 // timer functions

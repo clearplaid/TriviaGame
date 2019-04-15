@@ -3,10 +3,36 @@ body {
     color: black;
     background-size: cover;
 }
+h1 {
+    font-family: 'Dokdo', cursive;
+    font-size: 6rem;
+    line-height: 6rem;
+}
 .options {
+    font-family: 'Indie Flower', cursive;
+    font-weight: bolder;
+    font-size: 1rem;
+    background-color: yellow;
+    color: green;
+    border-color: green;
     margin: 20px;
     padding: 20px;
 }
 .outOfTime {
     max-width: 100%;
+}
+#questions {
+    font-family: 'Indie Flower', cursive;
+    font-size: 2rem;
+    padding: 5px; 
+}
+#time-remaining{
+    font-family: 'Dokdo', cursive;
+    font-size: 5rem;
+    line-height: 10rem;
+}
+.incorrectNumber,
+.correctNumber,
+.unanswered {
+
 }
