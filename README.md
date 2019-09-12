@@ -4,6 +4,8 @@ https://clearplaid.github.io/TriviaGame/
 
 A trivia game that shows only one question until the player answers it or their time runs out.
 
+![alt text](https://github.com/clearplaid/TriviaGame/blob/master/assets/images/trivia-game.png "Trivia-Game")
+
 If the player selects the correct answer, show a screen congratulating them for choosing the right option. After a few seconds, display the next question -- do this without user input.
 
 The scenario is similar for wrong answers and time-outs.
